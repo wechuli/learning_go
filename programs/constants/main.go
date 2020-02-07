@@ -44,3 +44,4 @@ func untypedConstants() {
 
 	fmt.Printf("%T \n", y)
 }
+
