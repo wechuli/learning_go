@@ -54,3 +54,5 @@ Go programs start running in the `main` package. It is a special package that is
 2. **go build**: it just compiles the application. It produces an executable
     - `go build file.go` compiles a bunch of Go source files. It compiles packages and dependencies
     - If you run `go build`, it will compile the files in the current directory and will produce an executable file with the name of the current working directory
+
+- In Go, all values are initialized

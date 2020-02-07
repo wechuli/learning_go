@@ -17,4 +17,9 @@ func main() {
 	fmt.Println(math.Abs(-333))
 
 	fmt.Printf("The distance in miles is %f \n", distance*0.685)
+	fakeFunction()
+}
+
+func fakeFunction() {
+	fmt.Println("hi there")
 }
