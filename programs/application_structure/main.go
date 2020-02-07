@@ -9,7 +9,7 @@ import (
 const secondsInHour = 3600
 
 func main() {
-	fmt.Println("Hello world")
+	fmt.Println(" Hello world")
 
 	// var leftHand float64 = 89.09
 	distance := 60.8
