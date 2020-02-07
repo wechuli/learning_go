@@ -27,9 +27,20 @@ func main() {
 	)
 	fmt.Println(min1, min2, min3)
 
+	untypedConstants()
+
 }
 
+func untypedConstants() {
+	const a float64 = 5.1 //typed constant
+	const b = 6.7         //untyped constants
 
-func untypedConstants()  {
-	
+	const c float64 = a * b // evaluated at compile time
+	const str = "Hello" + "Go"
+	const d = 5 < 10
+
+	const x = 5
+	const y = 2.3 * 5
+
+	fmt.Printf("%T \n", y)
 }
