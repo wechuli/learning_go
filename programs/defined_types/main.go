@@ -52,5 +52,10 @@ func classNotes() {
 	fmt.Printf("hour type: %T\n", hour) // => hour type: uint
 
 	//no need to convert operations (same type)
-	fmt.Printf("Minutes in an hour: %d\n", hour/60) // => Minutes in an hour: 60
+	fmt.Printf("Minutes in an hour: %d\n", hour/60) // => Minutes in an hour: 60[
+
+
+
+	
+	]
 }
