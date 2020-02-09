@@ -94,7 +94,7 @@ func main() {
 
 	fmt.Println(cities)
 
-
-	
+	weekend := [7]bool{5: true, 6: true}
+	fmt.Println(weekend) // => [false false false false false true true]
 
 }
