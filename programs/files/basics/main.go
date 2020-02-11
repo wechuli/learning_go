@@ -58,8 +58,25 @@ func main() {
 	fileInfo, err = os.Stat("b.txt")
 	if err != nil {
 		if os.IsNotExist(err) {
-			log.Fatal("File does not exist")
+			// log.Fatal("File does not exist")
 		}
+	}
+
+	// moving/renaming file
+	oldPath := "poem.txt"
+	newPath := "epithet.txt"
+
+	err = os.Rename(oldPath, newPath)
+	if err != nil {
+		fmt.Println(err)
+		// os.Exit(1)
+		// log.Fatal(err)
+	}
+
+	// removing a file
+	err = os.Remove("fake.txt")
+	if err != nil {
+		log.Fatal(err)
 	}
 
 }
