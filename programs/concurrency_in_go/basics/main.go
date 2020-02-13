@@ -3,17 +3,23 @@ package main
 import (
 	"fmt"
 	"runtime"
+	"sync"
 	"time"
 )
 
-func f1() {
+func f1(wg *sync.WaitGroup) {
 	fmt.Println("f1 (goroutine) execution started")
 
 	for i := 0; i < 3; i++ {
 		fmt.Println("f1, i = ", i)
+		time.Sleep(time.Second)
 	}
 
 	fmt.Println("f1 execution finished")
+
+	wg.Done()
+
+	// (*wg).Done()
 }
 
 func f2() {
@@ -36,13 +42,19 @@ func main() {
 
 	fmt.Println("GOMAXPROCS", runtime.GOMAXPROCS(0))
 
-	go f1()
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+
+	go f1(&wg)
 
 	fmt.Println("No of Goroutines after go f1(): ", runtime.NumGoroutine())
 
 	f2()
 
-	time.Sleep(time.Second * 2)
+	// time.Sleep(time.Second * 2)
+
+	wg.Wait()
 
 	fmt.Println("main execution stopped")
 }
