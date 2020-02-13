@@ -5,10 +5,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"runtime"
 	"strings"
+	"sync"
 )
 
-func checkAndSaveBody(url string) {
+func checkAndSaveBody(url string, wg *sync.WaitGroup) {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
@@ -31,16 +33,26 @@ func checkAndSaveBody(url string) {
 			}
 		}
 	}
+
+	wg.Done()
 }
 
 func main() {
 
 	urls := []string{"https://golang.org", "https://www.google.com", "https://www.medium.com", "https://microsoft.com"}
 
+	var wg sync.WaitGroup
+
+	wg.Add(len(urls))
+
 	for _, url := range urls {
-		checkAndSaveBody(url)
+		go checkAndSaveBody(url, &wg)
 
 		fmt.Println(strings.Repeat("#", 20))
 	}
+
+	fmt.Println("No. of Gouritines: ", runtime.NumGoroutine())
+
+	wg.Wait()
 
 }
