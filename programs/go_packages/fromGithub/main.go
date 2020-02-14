@@ -1,11 +1,16 @@
 package main
 
+
 import (
-	"learning_go/programs/go_packages/mypackages/numbers"
-	"learning_go/programs/go_packages/github.com/wechuli/master_go/packages/greet"
+	"fmt"
+
+	"github.com/wechuli/go_math/goemetry"
+	"github.com/wechuli/go_math/calc"
 )
 
-func main() {
-	greet.Greeter()
-	
+
+func main()  {
+	fmt.Println(goemetry.CubeVolume(85))
+	fmt.Println(calc.Sub(45,9))
+
 }
