@@ -76,8 +76,36 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 
 // delete an article
 
-func deleteArticle(w http.ResponseWriter, r *http.Request){
-	
+func deleteArticle(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("delete endpoint hit")
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	for index, article := range Articles {
+		if article.Id == id {
+			Articles = append(Articles[:index], Articles[index+1:]...)
+		}
+	}
+
+}
+
+// Update an Article
+func updateArticle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var article Article
+
+	json.Unmarshal(reqBody, &article)
+
+	for index, item := range Articles {
+		if item.Id == id {
+			Articles[index] = article
+		}
+	}
+
+	json.NewEncoder(w).Encode(article)
 }
 
 // homepage
@@ -99,6 +127,8 @@ func handleRequests() {
 	// NOTE: Ordering is important here! This has to be defined before the other `/article` endpoint.
 	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
 
+	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
+	myRouter.HandleFunc("/article/{id}", updateArticle).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
 
 	// finally, instead of passing in nil, we want to pass in our newly created router as the second argument
