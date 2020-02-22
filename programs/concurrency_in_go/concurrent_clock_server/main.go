@@ -12,6 +12,8 @@ func main() {
 
 	fmt.Println("Starting listener ...")
 	listener, err := net.Listen("tcp", "localhost:8000")
+
+	
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,7 +23,7 @@ func main() {
 			log.Print(err)
 			continue
 		}
-		handleConn(conn) //handle one connection at a time
+		go handleConn(conn) //handle one connection at a time
 	}
 }
 

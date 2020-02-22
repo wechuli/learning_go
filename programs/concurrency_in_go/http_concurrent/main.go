@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 )
 
 func checkAndSaveBody(url string, wg *sync.WaitGroup) {
@@ -21,7 +23,8 @@ func checkAndSaveBody(url string, wg *sync.WaitGroup) {
 
 		if resp.StatusCode == 200 {
 			bodyBytes, err := ioutil.ReadAll(resp.Body)
-			file := strings.Split(url, "//")[1]
+			// file := strings.Split(url, "//")[1]
+			file := generateRandomFileName()
 
 			file += ".html"
 
@@ -37,9 +40,20 @@ func checkAndSaveBody(url string, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
+func generateRandomFileName() (randString string) {
+	rand.Seed(time.Now().UnixNano())
+	chars := []rune("ABCDEFGHIJKLMNOPQRSTZabcdefghijklmnopqrstuvwxyz1234567")
+	length := 8
+	var b strings.Builder
+	for i := 0; i < length; i++ {
+		b.WriteRune(chars[rand.Intn(len(chars))])
+	}
+	return b.String()
+}
+
 func main() {
 
-	urls := []string{"https://golang.org", "https://www.google.com", "https://www.medium.com", "https://microsoft.com"}
+	urls := []string{"https://golang.org", "https://www.google.com", "https://www.medium.com", "https://microsoft.com", "http://feeds.twit.tv/twit.xml", "http://feeds.bbci.co.uk/news/rss.xml"}
 
 	var wg sync.WaitGroup
 

@@ -55,3 +55,13 @@ The `main` function then returns. When this happens, all goroutines are abruptyl
 Notice how the program is expressed as the composition of two autonomous activities, spinning and Fibonacci computation. Each is written as a separate function but both make progress concurrently.
 
 Networking is a natural domain in which to use concurrency since servers typically handle many connections from their clients at once, each client being essentially independent of the others.
+
+## Channels
+
+If goroutines are the activities of a concurrent Go program, channels are the connections between them. A channel is a communication mechanism that lets one goroutine send values to another. Each channel is a conduit for values of a particular type, called the channel's element type.
+
+As with maps, a channel is a reference to the data structure created by `make`. When we copy a channel or pass one as an argument to a function, we are copying a reference, so caller and callee refer to the same data structure. As with other reference types, the zero value of a channel is nil.
+
+A channel has two principal operations, send and receive, collectively known as communications. A send statement transmits a value from one goroutine, through the channel to another goroutine executing a corresponding receive expression. Both operations are written using the <- operator. In a send statement, the <-  separates the channel and value operands. In a receive expression, <- precedes the channel operand. A receive expression whose result is not used is a valid statement.
+
+Channels support a third operation, close, which sets a flag indicating that no more values will ever be sent on this channel, subsequent attempts to send will panic. Receive operations on a closed channel yield the values that have been sent until no more values are left; any receive operations thereafter complete immedia
