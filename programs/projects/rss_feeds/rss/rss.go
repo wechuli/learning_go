@@ -8,12 +8,10 @@ import (
 	"strings"
 
 	"github.com/mmcdole/gofeed/rss"
-	// "github.com/mmcdole/gofeed"
-	// "strings"
-	// "github.com/mmcdole/gofeed/rss"
 )
 
-func fetchRssFeedRaw(url string) (string, error) {
+// FetchRssFeedRaw downloads a raw rss website and returns a string representation
+func FetchRssFeedRaw(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 
@@ -28,15 +26,16 @@ func fetchRssFeedRaw(url string) (string, error) {
 
 }
 
-func parseRawRssString(rawRssString string) ([]models.Feed, error) {
-
-	// data, err := fetchRssFeedRaw("http://feeds.bbci.co.uk/news/rss.xml")
-	// if err != nil {
-	// 	return nil, err
-	// }
+// ParseRawRssString takes a string repr of an rss website and parses it to a slice of feeds and returns the feeds
+func ParseRawRssString(rawRssString string) ([]models.Feed, error) {
 
 	fp := rss.Parser{}
-	rssFeed, _ := fp.Parse(strings.NewReader(rawRssString))
+	rssFeed, err := fp.Parse(strings.NewReader(rawRssString))
+
+	if err != nil {
+		return nil, err
+	}
+	
 	var feeds []models.Feed
 
 	for _, item := range rssFeed.Items {

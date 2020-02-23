@@ -1,11 +1,9 @@
 package main
 
-
 import (
-"fmt"
-
+	"fmt"
+	// "os"
 )
-
 
 const (
 	host     = "localhost"
@@ -13,13 +11,15 @@ const (
 	user     = "rssuser"
 	password = "password"
 	dbname   = "rssfeeds"
-) 
+)
 
-func main(){
+func main() {
 
-fmt.Println("Starting program")	
-app := App{}
-app.Initialize(host,port,user,password,dbname)
+	// host, port, user, password, dbname := os.Getenv("RSS_DB_HOST"), 5432, os.Getenv("RSS_DB_USERNAME"), os.Getenv("RSS_DB_PASSWORD"), os.Getenv("RSS_DB_NAME")
 
+	fmt.Println("Starting program")
+	app := App{}
+	app.Initialize(host, port, user, password, dbname)
+	app.Run(":8080")
 
 }
