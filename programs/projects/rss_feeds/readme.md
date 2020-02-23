@@ -1,6 +1,6 @@
 ## Introduction
 
-The project allows fetching of RSS Feeds from BBC and CNN and enables the feeds to be accessed through a RESTful web service. Feeds are stored in a Postgres database and full text search can be performed on them. The search functionality is exposed as an API endpoint that accepts a search keyword and returns a JSON array of RSS feeds that matched the search criteria.
+The project fetches RSS Feeds from BBC and CNN and enables the feeds to be accessed and searched through a RESTful web service. Feeds are stored in a Postgres database and full text search can be performed on them. The search functionality is exposed as an API endpoint that accepts a search keyword and returns a JSON array of RSS feeds that matched the search criteria.
 
 ## Running the Project
 
@@ -27,17 +27,24 @@ CREATE TABLE feeds(
 
 The table does not need to be created before-hand, once the application is started, the necessary table will be created
 
-2. The project can be run using:
+2.  The project can be run using:
 
         go run main.go app.go
 
-This  initializes a http server on port 8080.
+This initializes a http server on port 8080.
+
+The database connection details are queried from the environment variables, so they will need to be setup before hand. Refer to code snippet below:
+
+```GO
+host, port, user, password, dbname := os.Getenv("RSS_DB_HOST"), 5432, os.Getenv("RSS_DB_USERNAME"), os.Getenv("RSS_DB_PASSWORD"), os.Getenv("RSS_DB_NAME")
+```
 
 3. There is only one route - for searching for the rss feeds `http://localhost:8080/search` which allows a POST with a JSON body describing the search term
 
 **sample request**
 
 `POST /search`
+
 ```JSON
 {
 	"term":"africa"
@@ -45,6 +52,7 @@ This  initializes a http server on port 8080.
 ```
 
 **sample response**
+
 ```JSON
 
 [
@@ -64,8 +72,7 @@ This  initializes a http server on port 8080.
 
 ```
 
+## Testing
 
-
-
-## End
+To test the project run `go test -v`.
 
