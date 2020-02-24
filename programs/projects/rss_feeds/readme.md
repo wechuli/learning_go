@@ -4,9 +4,13 @@ The project fetches RSS Feeds from BBC and CNN and enables the feeds to be acces
 
 ## Running the Project
 
-1. The project makes use of a Postgres database to store the rss feeds and uses Postgres's full text search capability to search through the feeds . A running Postgres database will need to be set up before the application is run. Sample script to create a Postgres database is provided below
+1. The project makes use of a Postgres database to store the rss feeds and uses Postgres's full text search capability to search through the feeds . A running Postgres database will need to be set up before the application is run. A sample script to create a Postgres database is provided below:
 
 ```SQL
+
+
+CREATE DATABASE rssfeeds;
+CREATE USER rssuser WITH PASSWORD 'password';
 
 ALTER ROLE rssuser SET client_encoding TO 'utf8';
 ALTER ROLE rssuser SET default_transaction_isolation TO 'read committed';
@@ -25,21 +29,21 @@ CREATE TABLE feeds(
 
 ```
 
-The table does not need to be created before-hand, once the application is started, the necessary table will be created
+The table does not need to be created before-hand, once the application is started, the necessary table will be created if it does not exist.
 
 2.  The project can be run using:
 
         go run main.go app.go
 
-This initializes a http server on port 8080.
+This initializes a http server on port 8080 while concurrently fetching new RSS Feeds from CNN and BBC and storing them on the database.
 
-The database connection details are queried from the environment variables, so they will need to be setup before hand. Refer to code snippet below:
+The database connection details are queried from the environment variables, so they will need to be setup before hand. Refer to code snippet below to name the environment variables correctly:
 
 ```GO
-host, port, user, password, dbname := os.Getenv("RSS_DB_HOST"), 5432, os.Getenv("RSS_DB_USERNAME"), os.Getenv("RSS_DB_PASSWORD"), os.Getenv("RSS_DB_NAME")
+host, user, password, dbname := os.Getenv("RSS_DB_HOST"), os.Getenv("RSS_DB_USERNAME"), os.Getenv("RSS_DB_PASSWORD"), os.Getenv("RSS_DB_NAME")
 ```
 
-3. There is only one route - for searching for the rss feeds `http://localhost:8080/search` which allows a POST with a JSON body describing the search term
+3. There is only one route - for searching for the feeds `/search` which allows a `POST` method with a JSON body describing the search term
 
 **sample request**
 
@@ -72,7 +76,67 @@ host, port, user, password, dbname := os.Getenv("RSS_DB_HOST"), 5432, os.Getenv(
 
 ```
 
+## Application Structure
+
+To separate concerns, the project was implemented using two packages(additional to `main`) :- `models` and `rss`
+
+### Package rss
+
+Package rss implements functions concerned with fetching and parsing rss feeds from CNN and BBC (it can fetch rss feeds from any rss enabled website) and returning it in a format ready to be stored in the database (where the `models` package takes over)
+
+- **`func FetchRssFeedRaw`**
+
+  ```GO
+
+    func FetchRssFeedRaw(url string) (string, error)
+  ```
+
+  `FetchRssFeedRaw` fetches the raw rss feeds (usually in xml) and returns a string representation of the same.
+
+- **`func ParseRawRssString`**
+
+      ```GO
+      func ParseRawRssString(rawRssString string) ([]models.Feed, error)
+
+`ParseRawRssString` receives a raw string rss website and parses it to extract the rss feeds represented in a convenient `Feed` struct, defined in the package `models`. It returns a slice of feeds extracted from the website.
+
+### Package models
+
+Package models implements types and functions related to reading and writing the rss feeds to the database. It expects feeds to have already been formatted correctly (from the rss package).
+
+- **`type Feed`**
+
+  ```GO
+  type Feed struct {
+  `
+  `
+  `
+  Link        string `json:"link"`
+  }
+
+  ```
+
+  `Feed` struct is a minimal representation of the rss feeds, with just enough information to enable searching. JSON tags are included to allow marshalling and unmarshalling when working with the web servive
+
+- **`func StoreRssFeeds`**
+
+  ```GO
+  func StoreRssFeeds(db *sql.DB, feeds []Feed) error{...}
+
+  ```
+
+  `StoreRssFeeds` takes a slice of `Feeds` and runs a query on the database(pointed at by the `db` parameter) to store the Feeds.
+
+- **`func SearchRssFeeds`**
+
+  ```GO
+
+  func SearchRssFeeds(db *sql.DB, searchString string) ([]Feed, error){...}
+
+  ```
+
+  `SearchRssFeeds` performs a full text search on the database (pointed at by the `db` parameter) for the phrase specified in the `searchString` string parameter and returns a slice of Feeds that match the search criteria.
+
 ## Testing
 
 To test the project run `go test -v`.
-

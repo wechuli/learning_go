@@ -87,7 +87,7 @@ func (a *App) searchFeeds(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, feeds)
 }
 
-// FetchNewFeedsAndPopulateDB loops through a list of specified urls, gets the feeds and populates the DB with *new rss feeds
+// FetchNewFeedsAndPopulateDB loops through a list of specified urls, gets the feeds and populates the DB with *new* rss feeds
 func (a *App) FetchNewFeedsAndPopulateDB() {
 
 	// CNN and BBC rss feeds links for various news categories
