@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=educative
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=go
+    volumes:
+      - ./postgres:/var/lib/postgresql/data/
+    networks:
+      - psql
+    ports:
+      - "6004:5432"
+
+volumes:
+  postgresgo:
+
+networks:
+  psql:
+    driver: bridge
